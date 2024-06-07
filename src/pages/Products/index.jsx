@@ -27,8 +27,8 @@ function Products() {
             {data.map(
               ({ id, title, description, image, price, raiting, stock }) => (
                 <div key={id} className="product">
-                  <div className="card w-96 bg-base-100 shadow-xl">
-                    <figure>
+                  <div className="card w-96 bg-base-100 shadow-md shadow-primary">
+                    <figure className="">
                       <img src={image} alt="" />
                     </figure>
                     <div className="card-body">
