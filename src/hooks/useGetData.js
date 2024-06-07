@@ -2,23 +2,38 @@ import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config";
 
-async function useGetData({ collectionName }) {
+export default function useGetData({ collectionName }) {
   const [data, setData] = useState([]);
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState({
     status: false,
-    message: "Hatolik yuz bedi ertaga hatolik ikkiyuz berar ekan",
+    message: "",
   });
 
   useEffect(() => {
     const getData = async () => {
-      const querySnapshot = await getDocs(collection(db, collectionName));
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-      });
+      const documents = [];
+      try {
+        const querySnapshot = await getDocs(collection(db, collectionName));
+        querySnapshot.forEach((doc) => {
+          documents.push({ id: doc.id, ...doc.data() });
+        });
+
+        setData(documents);
+      } catch (error) {
+        setError({ status: true, message: error.message });
+      } finally {
+        setIsPending(false);
+      }
     };
-    getData();
-  }, []);
-  return;
+
+    if (collectionName) {
+      getData();
+    } else {
+      setIsPending(false);
+      setError({ status: true, message: "Collection name is required." });
+    }
+  }, [collectionName]);
+
+  return { data, isPending, error };
 }
-export default useGetData;
