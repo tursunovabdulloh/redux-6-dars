@@ -11,7 +11,9 @@ function Products() {
         pt-5  pb-3 border-b-4"
         >
           <h1>Products</h1>
-          <button className="btn btn-circle btn-outline btn-md">Add</button>
+          <button className="flex items-center justify-center btn btn-square btn-outline btn-sm  px-8 ">
+            <p className="text-md">Add</p>
+          </button>
         </div>
         {isPending && (
           <div className="mt-10 flex justify-center items-center">
@@ -23,17 +25,17 @@ function Products() {
         )}
         {error.status && <p className="text-red-500">{error.message}</p>}
         {!isPending && !error.status && (
-          <div className="mt-10">
+          <div className="mt-10 pb-10">
             {data.map(
               ({ id, title, description, image, price, raiting, stock }) => (
                 <div key={id} className="product">
-                  <div className="card w-96 bg-base-100 shadow-md shadow-primary">
-                    <figure className="">
-                      <img src={image} alt="" />
+                  <div className="card w-[320px] bg-base-100 shadow-md shadow-primary">
+                    <figure>
+                      <img src={image} alt="" width={250} />
                     </figure>
                     <div className="card-body">
                       <h2 className="card-title">{title}</h2>
-                      <p>{description}</p>
+                      {/* <p>{description}</p> */}
                       <div className="card-actions justify-end">
                         <button className="btn btn-primary">Buy Now</button>
                       </div>
