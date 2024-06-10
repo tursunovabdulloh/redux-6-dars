@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config";
 
-export default function useGetData({ collectionName, refresh }) {
+export default function useGetData({
+  collectionName,
+  refresh,
+  filter = "rating",
+}) {
   const [data, setData] = useState([]);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState({
@@ -19,7 +23,7 @@ export default function useGetData({ collectionName, refresh }) {
           documents.push({ id: doc.id, ...doc.data() });
         });
 
-        setData(documents);
+        setData(documents.sort((a, b) => b[`${filter}`] - a[`${filter}`]));
       } catch (error) {
         setError({ status: true, message: error.message });
       } finally {

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { DeleteItem } from "../../firebase/productDelete";
 import useGetData from "../../hooks/useGetData";
 import ProductModal from "../../components/ProductModal";
 
@@ -8,11 +9,19 @@ function Products() {
     collectionName: "products",
     refresh,
   });
+  const hndledelete = async (id) => {
+    document.getElementById("my_modal_1").showModal();
+    const status = await DeleteItem("products", id);
+    setRefresh((prev) => !prev);
+    document.getElementById("my_modal_2").closet("dialog").close();
+  };
+
   return (
     <section>
       <div className="container">
         <div
-          className="flex justify-between items-center
+          className="
+          flex justify-between items-center
              pt-5  pb-3 border-b-4"
         >
           <h1>Products</h1>
@@ -51,7 +60,16 @@ function Products() {
                       <p className="text-lg">Price: {price}$</p>
                       <p>Stock: {stock}</p>
                       <div className="card-actions justify-end">
-                        <button className="btn btn-primary">Buy Now</button>
+                        <button className="btn btn-primary text-[16px]">
+                          Buy Now
+                        </button>
+                        <button
+                          // onClick={() => DeleteItem("products", id)}
+                          onClick={() => handledelete(id)}
+                          className="btn btn-error text-[16px]"
+                        >
+                          Delete
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -63,6 +81,12 @@ function Products() {
       </div>
       {/* You can open the modal using document.getElementById('ID').showModal() method */}
       <ProductModal setRefresh={setRefresh} />
+      {/* deleteModal */}
+      <dialog id="my_modal_1" className="modal">
+        <div className="modal-box">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      </dialog>
     </section>
   );
 }
