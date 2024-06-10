@@ -3,8 +3,11 @@ import useGetData from "../../hooks/useGetData";
 import ProductModal from "../../components/ProductModal";
 
 function Products() {
-  const { data, isPending, error } = useGetData({ collectionName: "products" });
-  const [openModal, setOpenModal] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  const { data, isPending, error } = useGetData({
+    collectionName: "products",
+    refresh,
+  });
   return (
     <section>
       <div className="container">
@@ -32,10 +35,10 @@ function Products() {
         )}
         {error.status && <p className="text-red-500">{error.message}</p>}
         {!isPending && !error.status && (
-          <div className="grid grid-rows-3 mt-10 pb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 md:gap-24  xl:gap-x-48 mt-10 pb-20">
             {data.map(
               ({ id, title, description, image, price, raiting, stock }) => (
-                <div key={id} className="product">
+                <div key={id} className="product justify-self-center">
                   <div className="card w-[320px] bg-base-100 shadow-md shadow-primary">
                     <figure>
                       <img src={image} alt="" width={250} />
@@ -55,7 +58,7 @@ function Products() {
         )}
       </div>
       {/* You can open the modal using document.getElementById('ID').showModal() method */}
-      <ProductModal closeModal={setOpenModal} />
+      <ProductModal setRefresh={setRefresh} />
     </section>
   );
 }

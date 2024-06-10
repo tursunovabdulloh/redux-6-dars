@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config";
 
-export default function useGetData({ collectionName }) {
+export default function useGetData({ collectionName, refresh }) {
   const [data, setData] = useState([]);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState({
@@ -33,7 +33,7 @@ export default function useGetData({ collectionName }) {
       setIsPending(false);
       setError({ status: true, message: "Collection name is required." });
     }
-  }, [collectionName]);
+  }, [refresh]);
 
   return { data, isPending, error };
 }

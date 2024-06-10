@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 
-function ProductModal({ closeModal }) {
+function ProductModal({ setRefresh }) {
   const [productData, setProductData] = useState({
     title: "",
     stock: "",
@@ -21,6 +21,7 @@ function ProductModal({ closeModal }) {
     console.log(docRef);
     setProductData({ title: "", stock: "", image: "", price: "", rating: "" });
     document.getElementById("my_modal_3").closest("dialog").close();
+    setRefresh((prev) => !prev);
   };
   return (
     <dialog id="my_modal_3" className="modal">
@@ -37,7 +38,7 @@ function ProductModal({ closeModal }) {
         >
           <label className="form-control w-full max-w-xs">
             <div className="label w-full">
-              <span className="label-text text-left">Products Name</span>
+              <span className="label-text text-left">Products Title</span>
             </div>
             <input
               type="text"
