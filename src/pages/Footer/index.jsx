@@ -4,7 +4,7 @@ function Footer() {
   return (
     <div className="bg-base-300">
       <div className="container">
-        <footer className="footer p-10 flex justify-between">
+        <footer className="footer p-10 flex justify-between pb-4">
           <aside>
             <svg
               width="50"
