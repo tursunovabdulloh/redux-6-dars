@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/config";
 
 export default function useGetData({
   collectionName,
   refresh,
-  filter = "rating",
+  filter = "price",
 }) {
   const [data, setData] = useState([]);
   const [isPending, setIsPending] = useState(true);
@@ -13,8 +13,7 @@ export default function useGetData({
     status: false,
     message: "",
   });
-
-  useEffect(() => {
+  +useEffect(() => {
     const getData = async () => {
       const documents = [];
       try {
@@ -22,15 +21,13 @@ export default function useGetData({
         querySnapshot.forEach((doc) => {
           documents.push({ id: doc.id, ...doc.data() });
         });
-
-        setData(documents.sort((a, b) => b[`${filter}`] - a[`${filter}`]));
+        setData(documents);
       } catch (error) {
         setError({ status: true, message: error.message });
       } finally {
         setIsPending(false);
       }
     };
-
     if (collectionName) {
       getData();
     } else {
@@ -39,5 +36,33 @@ export default function useGetData({
     }
   }, [refresh]);
 
-  return { data, isPending, error };
+  const FilterData = useMemo(() => {
+    if (filter === null) {
+      return data;
+    }
+    if (filter === "title") {
+      return data.sort(function (a, b) {
+        if (a.title < b.title) {
+          return -1;
+        }
+        if (a.title > b.title) {
+          return 1;
+        }
+        return 0;
+      });
+    }
+    if (filter === "!title") {
+      return data.sort(function (a, b) {
+        if (a.title < b.title) {
+          return 1;
+        }
+        if (a.title > b.title) {
+          return -1;
+        }
+        return 0;
+      });
+    }
+    return data.sort((a, b) => b[`${filter}`] - a[`${filter}`]);
+  }, [filter, data]);
+  return { data, FilterData, isPending, error };
 }
