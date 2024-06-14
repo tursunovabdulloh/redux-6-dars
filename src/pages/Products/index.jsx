@@ -11,11 +11,25 @@ function Products() {
     refresh,
     filter,
   });
+  console.log(data);
   const handledelete = async (id) => {
     document.getElementById("my_modal_1").showModal();
     const status = await DeleteItem("products", id);
     setRefresh((prev) => !prev);
     document.getElementById("my_modal_1").closest("dialog").close();
+  };
+
+  const handleAddToCart = (id) => {
+    firebase
+      .firestore()
+      .collection("cart")
+      .doc("FRsgd975ZkxM2pNJkjSn")
+      .update({
+        products: firebase.firestore.FieldValue.arrayUnion({
+          productId: id,
+          count: 1,
+        }),
+      });
   };
 
   return (
@@ -24,7 +38,7 @@ function Products() {
         <div
           className="
           flex justify-between items-center
-             pt-5  pb-3 border-b-4"
+             pt-5  pb-3 pl-5 pr-3 border-b-4"
         >
           <h1>Products</h1>
           <div className="flex items-center gap-5">
@@ -83,13 +97,16 @@ function Products() {
                       <p>
                         Rating: <span>{rating}🌟</span>
                       </p>
-                      <div className="card-actions justify-end">
-                        <button className="btn btn-primary text-[16px]">
+                      <div className="card-actions justify-star pt-2 ">
+                        <button
+                          onClick={() => handleAddToCart(id)}
+                          className="btn btn-primary btn-sm text-[16px]"
+                        >
                           Buy Now
                         </button>
                         <button
                           onClick={() => handledelete(id)}
-                          className="btn btn-error text-[16px]"
+                          className="btn btn-error  btn-sm text-[16px]"
                         >
                           Delete
                         </button>
